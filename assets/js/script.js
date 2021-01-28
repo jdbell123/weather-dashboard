@@ -4,9 +4,7 @@ $(document).ready(function () {
     renderPrevSearches();
   
     $("button").on("click", function () {
-      console.log("button clicked!");
       var textFromScreen = $("#searchText").val().trim();
-      console.log(textFromScreen);
       if (textFromScreen > "") {
         $("#searchText").val("");
         saveSearch(textFromScreen);
@@ -23,7 +21,6 @@ $(document).ready(function () {
       $("#prevSearches").empty();
   
       var savedText = JSON.parse(localStorage.getItem("savedText"));
-      console.log("savedText: " + savedText)
       if (savedText !== null) {
         for (var i = 0; i < savedText.length; i++) {
           var newDiv = $("<div>").addClass("p-3 border").text(savedText[i]);
@@ -37,7 +34,6 @@ $(document).ready(function () {
   
     function saveSearch(textToSave) {
       var saveArray = JSON.parse(localStorage.getItem("savedText"));
-      console.log(saveArray);
       if (saveArray !== null) {
         // Only save to localStorage if text not already present
         var textPresent = saveArray.includes(textToSave);
@@ -93,8 +89,6 @@ $(document).ready(function () {
           url: getWeatherURL,
           method: "GET",
         }).then(function (response) {
-          console.log(response);
-  
           var uvIndex = response.current.uvi
           var currDate = new Date(response.current.dt * 1000).toLocaleDateString();
           var currCardDiv = $("<div>").addClass("card");
@@ -137,21 +131,8 @@ $(document).ready(function () {
           var newRow = $("<div>").addClass("row");
           $("#futureForecast").append(newRow);
           for (var i = 1; i < 6; i++) {
-            console.log(
-              "************************************************************"
-            );
-            console.log("Day Date: " + response.daily[i].dt);
             var myDate = new Date(response.daily[i].dt * 1000);
-            console.log("myDate: " + myDate);
             var myDate2 = myDate.toLocaleDateString();
-            console.log("myDate(Local): " + myDate2);
-            console.log(
-              "Day Forecast: " + response.daily[i].weather[0].description
-            );
-            console.log("Day Forecast Icon: " + response.daily[i].weather[0].icon);
-            // "https://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
-            console.log("Day Temp: " + response.daily[i].temp.max);
-            console.log("Day Humidity: " + response.daily[i].humidity);
   
             var futureColDiv = $("<div>").addClass("col-md-2");
             var futureCardBodyDiv = $("<div>").addClass("card-body bg-primary text-white");
