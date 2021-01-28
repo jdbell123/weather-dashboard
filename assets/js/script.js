@@ -188,18 +188,4 @@ $(document).ready(function () {
       })
     }));
   
-      // function () {
-      //   $(this).css({
-      //     "background-color": '#0D6EFD',
-      //     "color": "white",
-      //     "cursor": "default"
-      //   });
-      // }, function () {
-      //   $(this).css({
-      //     "background-color": 'white',
-      //     "color": "black"
-      //   });
-      // })
-  
-  
   });  
