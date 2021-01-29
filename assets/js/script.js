@@ -1,6 +1,8 @@
 // document ready statement to make sure the page fully loads before running this code
 $(document).ready(function () {
 
+  var placeName;
+
   // function to render previous searched text to the page.
   function renderPrevSearches() {
     // empty out previously built content so the data doesn't repeat.
@@ -74,6 +76,10 @@ $(document).ready(function () {
     }).then(function (response) {
       // from the response of the api we are interested in getting the latitude and longitude of the entered text.
       // we pass this data to a function that will get the full weather data.
+      console.log(response);
+      placeName = response.name;
+      // save the text entered on the screen into the previous searched area and into local storage.
+      saveSearch(placeName);
       getWeatherData(response.coord.lat, response.coord.lon);
     });
 
@@ -93,13 +99,14 @@ $(document).ready(function () {
         url: getWeatherURL,
         method: "GET",
       }).then(function (response) {
+        console.log(response);
         // after api returns data use data to build the current weather card on the page.
         var uvIndex = response.current.uvi
         // convert date into readable date format string.
         var currDate = new Date(response.current.dt * 1000).toLocaleDateString();
         var currCardDiv = $("<div>").addClass("card");
         var currCardBodyDiv = $("<div>").addClass("card-body");
-        var currH2Div = $("<h2>").addClass("mb-4").text(searchText + " (" + currDate + ")");
+        var currH2Div = $("<h2>").addClass("mb-4").text(placeName + " (" + currDate + ")");
         // get the weather icon and build an img tag.
         var currWeatherIcon = $("<img>").attr("src", "https://openweathermap.org/img/wn/" + response.current.weather[0].icon + "@2x.png");
         // add text attribute for image.
@@ -173,14 +180,13 @@ $(document).ready(function () {
 
 
   // on click event handler for search button.
-  $("button").on("click", function () {
+  $("button").on("click", function (event) {
+    event.preventDefault();
     var textFromScreen = $("#searchText").val().trim();
     // only call internal functions if the user has entered some search text on the screen.
     if (textFromScreen > "") {
       // blank out the search box text on the screen.
       $("#searchText").val("");
-      // save the text entered on the screen into the previous searched area and into local storage.
-      saveSearch(textFromScreen);
       // get the weather data for the text entered.
       getWeather(textFromScreen);
     }
@@ -189,6 +195,12 @@ $(document).ready(function () {
   // on click event handler for when user clicks on one of the previously searched items.
   $("#prevSearches").on("click", "div", function () {
     getWeather($(this).text());
+  });
+
+  // on click event handler for when user clicks on the clear history button.
+  $("#clearHistory").on("click", function () {
+    localStorage.clear();
+    renderPrevSearches();
   });
 
   // on mouseenter event handler for when user enters one of the previously searched items.
